@@ -1,0 +1,61 @@
+id,company,indicator_name,category,esrs,value,unit,confidence,source_page,source_section,notes
+1,AIB,Total Scope 1 GHG Emissions,Environmental,E1,,tCO2e,0.0,,,Not found in batch extraction
+2,AIB,Total Scope 2 GHG Emissions,Environmental,E1,,tCO2e,0.0,,,Not found in batch extraction
+3,AIB,Total Scope 3 GHG Emissions,Environmental,E1,,tCO2e,0.0,,,Not found in batch extraction
+4,AIB,GHG Emissions Intensity,Environmental,E1,,tCO2e per €M revenue,0.0,,,Not found in batch extraction
+5,AIB,Total Energy Consumption,Environmental,E1,,MWh or GJ,0.0,,,Not found in batch extraction
+6,AIB,Renewable Energy Percentage,Environmental,E1,,%,0.0,,,Not found in batch extraction
+7,AIB,Net Zero Target Year,Environmental,E1,,year,0.0,,,Not found in batch extraction
+8,AIB,Green Financing Volume,Environmental,E1,,€ millions,0.0,,,Not found in batch extraction
+9,AIB,Total Employees,Social,S1,,FTE,0.0,,,Not found in batch extraction
+10,AIB,Female Employees,Social,S1,,%,0.0,,,Not found in batch extraction
+11,AIB,Gender Pay Gap,Social,S1,,%,0.0,,,Not found in batch extraction
+12,AIB,Training Hours per Employee,Social,S1,,hours,0.0,,,Not found in batch extraction
+13,AIB,Employee Turnover Rate,Social,S1,,%,0.0,,,Not found in batch extraction
+14,AIB,Work-Related Accidents,Social,S1,,count,0.0,,,Not found in batch extraction
+15,AIB,Collective Bargaining Coverage,Social,S1,,%,0.0,,,Not found in batch extraction
+16,AIB,Board Female Representation,Governance,G1,,%,0.0,,,Not found in batch extraction
+17,AIB,Board Meetings,Governance,G1,,count/year,0.0,,,Not found in batch extraction
+18,AIB,Corruption Incidents,Governance,G1,,count,0.0,,,Not found in batch extraction
+19,AIB,Avg Payment Period to Suppliers,Governance,ESRS 2,,days,0.0,,,Not found in batch extraction
+20,AIB,Suppliers Screened for ESG,Governance,ESRS 2,,%,0.0,,,Not found in batch extraction
+21,BPCE,Total Scope 1 GHG Emissions,Environmental,E1,,tCO2e,0.0,,,Not found in batch extraction
+22,BPCE,Total Scope 2 GHG Emissions,Environmental,E1,,tCO2e,0.0,,,Not found in batch extraction
+23,BPCE,Total Scope 3 GHG Emissions,Environmental,E1,,tCO2e,0.0,,,Not found in batch extraction
+24,BPCE,GHG Emissions Intensity,Environmental,E1,,tCO2e per €M revenue,0.0,,,Not found in batch extraction
+25,BPCE,Total Energy Consumption,Environmental,E1,,MWh or GJ,0.0,,,Not found in batch extraction
+26,BPCE,Renewable Energy Percentage,Environmental,E1,,%,0.0,,,Not found in batch extraction
+27,BPCE,Net Zero Target Year,Environmental,E1,,year,0.0,,,Not found in batch extraction
+28,BPCE,Green Financing Volume,Environmental,E1,,€ millions,0.0,,,Not found in batch extraction
+29,BPCE,Total Employees,Social,S1,,FTE,0.0,,,Not found in batch extraction
+30,BPCE,Female Employees,Social,S1,,%,0.0,,,Not found in batch extraction
+31,BPCE,Gender Pay Gap,Social,S1,,%,0.0,,,Not found in batch extraction
+32,BPCE,Training Hours per Employee,Social,S1,,hours,0.0,,,Not found in batch extraction
+33,BPCE,Employee Turnover Rate,Social,S1,,%,0.0,,,Not found in batch extraction
+34,BPCE,Work-Related Accidents,Social,S1,,count,0.0,,,Not found in batch extraction
+35,BPCE,Collective Bargaining Coverage,Social,S1,,%,0.0,,,Not found in batch extraction
+36,BPCE,Board Female Representation,Governance,G1,,%,0.0,,,Not found in batch extraction
+37,BPCE,Board Meetings,Governance,G1,,count/year,0.0,,,Not found in batch extraction
+38,BPCE,Corruption Incidents,Governance,G1,,count,0.0,,,Not found in batch extraction
+39,BPCE,Avg Payment Period to Suppliers,Governance,ESRS 2,,days,0.0,,,Not found in batch extraction
+40,BPCE,Suppliers Screened for ESG,Governance,ESRS 2,,%,0.0,,,Not found in batch extraction
+41,BBVA,Total Scope 1 GHG Emissions,Environmental,E1,,tCO2e,0.0,,,Not found in batch extraction
+42,BBVA,Total Scope 2 GHG Emissions,Environmental,E1,,tCO2e,0.0,,,Not found in batch extraction
+43,BBVA,Total Scope 3 GHG Emissions,Environmental,E1,,tCO2e,0.0,,,Not found in batch extraction
+44,BBVA,GHG Emissions Intensity,Environmental,E1,,tCO2e per €M revenue,0.0,,,Not found in batch extraction
+45,BBVA,Total Energy Consumption,Environmental,E1,,MWh or GJ,0.0,,,Not found in batch extraction
+46,BBVA,Renewable Energy Percentage,Environmental,E1,,%,0.0,,,Not found in batch extraction
+47,BBVA,Net Zero Target Year,Environmental,E1,,year,0.0,,,Not found in batch extraction
+48,BBVA,Green Financing Volume,Environmental,E1,,€ millions,0.0,,,Not found in batch extraction
+49,BBVA,Total Employees,Social,S1,,FTE,0.0,,,Not found in batch extraction
+50,BBVA,Female Employees,Social,S1,,%,0.0,,,Not found in batch extraction
+51,BBVA,Gender Pay Gap,Social,S1,,%,0.0,,,Not found in batch extraction
+52,BBVA,Training Hours per Employee,Social,S1,,hours,0.0,,,Not found in batch extraction
+53,BBVA,Employee Turnover Rate,Social,S1,,%,0.0,,,Not found in batch extraction
+54,BBVA,Work-Related Accidents,Social,S1,,count,0.0,,,Not found in batch extraction
+55,BBVA,Collective Bargaining Coverage,Social,S1,,%,0.0,,,Not found in batch extraction
+56,BBVA,Board Female Representation,Governance,G1,,%,0.0,,,Not found in batch extraction
+57,BBVA,Board Meetings,Governance,G1,,count/year,0.0,,,Not found in batch extraction
+58,BBVA,Corruption Incidents,Governance,G1,,count,0.0,,,Not found in batch extraction
+59,BBVA,Avg Payment Period to Suppliers,Governance,ESRS 2,,days,0.0,,,Not found in batch extraction
+60,BBVA,Suppliers Screened for ESG,Governance,ESRS 2,,%,0.0,,,Not found in batch extraction
