@@ -1,200 +1,201 @@
-# AI-Powered CSRD Indicator Extraction System
+# ESG Data Extraction System
 
-## Overview
+## 1. Executive Summary
+This repository implements a **production-oriented ESG data extraction system** designed to extract predefined Environmental, Social, and Governance (ESG) indicators from large annual report PDFs. The system is optimized for **accuracy, auditability, and deterministic behavior**, rather than exploratory semantic search.
 
-This project implements an **AI-powered data extraction system** that automatically extracts **20 predefined sustainability (ESG) indicators** from **CSRD-aligned sustainability reports** of three European banks:
-
-- BBVA  
-- Groupe BPCE  
-- AIB Group  
-
-The system processes large PDF reports, extracts structured indicator data using an LLM, stores results in a database, and exports a consolidated CSV for downstream analysis.
-
-The solution is designed as a **pragmatic, production-oriented prototype**, built under strict time constraints, prioritizing **accuracy, traceability, and explainability** over over-engineering.
+The solution uses **page-guided PDF extraction combined with controlled LLM-based parsing**, and produces a structured CSV output suitable for downstream analytics or regulatory reporting.
 
 ---
 
-## Problem Statement
+## 2. Scope and Objectives
 
-CSRD sustainability reports are:
-- Large (400–1100+ pages)
-- Inconsistently structured
-- A mix of tables, narratives, and appendices
+### In Scope
+- Extraction of predefined ESG indicators (E, S, G)
+- Deterministic page-based PDF parsing
+- Controlled use of LLMs for structured extraction
+- Explicit handling of missing or unavailable values
+- CSV export for downstream consumption
 
-Manual extraction of ESG indicators is:
-- Time-consuming
-- Error-prone
-- Not scalable
-
-The goal of this system is to **automate structured extraction** of a fixed set of ESG indicators while:
-- Avoiding hallucinations
-- Preserving source traceability
-- Clearly handling missing or ambiguous disclosures
+### Out of Scope
+- Free-form document summarization
+- Narrative or qualitative analysis
+- Semantic search across unknown documents
+- Real-time or streaming ingestion
 
 ---
 
-## Key Design Decisions (and Why)
+## 3. Design Principles
 
-### 1. Indicator-Driven Extraction (Not Open-Ended QA)
+1. **Determinism over Recall**  
+   The system only extracts values when explicitly present.
 
-Extraction is driven by a **fixed list of 20 predefined indicators**, not free-form questions.
+2. **Auditability by Design**  
+   Every extracted value can be traced back to a PDF page range.
 
-**Why**
-- Matches regulatory and client requirements
-- Prevents scope creep
-- Enables deterministic outputs
-- Easier to validate and scale
+3. **LLM as a Parser, Not a Source of Truth**  
+   The LLM never infers or fabricates values.
 
-Each indicator has:
-- A clear definition
-- Expected unit
-- Explicit output schema
+4. **Graceful Failure**  
+   Missing values are explicitly recorded as `Not found`.
 
 ---
 
-### 2. Page-Scoped PDF Processing
+## 4. High-Level System Architecture
 
-The system extracts text only from **predefined page ranges** relevant to each indicator.
-
-**Why**
-- Full-document processing increases hallucination risk
-- Reduces token usage and cost
-- Improves accuracy by limiting context
-
-**Important**
-Page ranges are treated as **configuration metadata**, not hard-coded logic.
-
-This reflects a **Phase-1 production prototype**:
-- Manual scoping for known reports
-- Designed to be replaced by automated section detection later
-
----
-
-### 3. LLM as a Controlled Extraction Component
-
-The LLM is used only for **narrow, deterministic extraction**, not reasoning or summarization.
-
-**The LLM does**
-- Scan scoped text for one indicator
-- Extract a value if explicitly stated
-- Return `null` if not found
-- Assign a confidence score
-- Cite source page and section
-
-**The LLM does NOT**
-- Guess missing values
-- Infer from unrelated data
-- Perform cross-section calculations
-- Search external sources
-
----
-
-### 4. Strict Structured Output Contract
-
-The LLM must return **JSON-only output** with a fixed schema:
-
-```json
-{
-  "value": number | string | null,
-  "unit": string,
-  "confidence": 0.0–1.0,
-  "source_page": number,
-  "source_section": string,
-  "notes": string
-}
+```
+┌──────────────────────────┐
+│ Configuration Layer       │
+│ (Indicators & Pages)      │
+└───────────┬──────────────┘
+            │
+            ▼
+┌──────────────────────────┐
+│ PDF Extraction Layer      │
+│ (Page-based text reader)  │
+└───────────┬──────────────┘
+            │
+            ▼
+┌──────────────────────────┐
+│ Text Aggregation Layer    │
+│ (Per company)             │
+└───────────┬──────────────┘
+            │
+            ▼
+┌──────────────────────────┐
+│ LLM Parsing Layer         │
+│ (Batch JSON extraction)   │
+└───────────┬──────────────┘
+            │
+            ▼
+┌──────────────────────────┐
+│ Validation & Normalization│
+│ (Null-safe, deterministic)│
+└───────────┬──────────────┘
+            │
+            ▼
+┌──────────────────────────┐
+│ Persistence Layer         │
+│ (SQLite)                  │
+└───────────┬──────────────┘
+            │
+            ▼
+┌──────────────────────────┐
+│ Export Layer              │
+│ (CSV)                     │
+└──────────────────────────┘
 ```
 
-This prevents ambiguity and simplifies validation.
+---
+
+## 5. Component Breakdown
+
+### 5.1 Configuration Layer
+- `config/pages.py`: Maps each company to its PDF path and indicator-specific page ranges
+- `config/indicators.py`: Defines indicator metadata (name, category, ESRS mapping, units)
+
+This layer externalizes business logic and avoids hard-coded assumptions.
 
 ---
 
-### 5. Confidence Scoring
+### 5.2 PDF Extraction Layer
+- Reads only predefined page ranges
+- Avoids OCR and semantic search
+- Produces deterministic text output
 
-Every extracted value includes a **confidence score** to reflect disclosure quality.
-
-Typical interpretation:
-- 0.8–0.95 → Explicit table value
-- 0.5–0.7 → Narrative disclosure
-- ≤ 0.4 → Not found or unclear
+This design ensures repeatability and performance.
 
 ---
 
-### 6. Store Everything (Including Missing Values)
-
-Every `(company, indicator)` attempt is stored as a row, even if the value is missing.
-
-**Why**
-- Prevents silent failures
-- Makes coverage gaps explicit
-- Supports audit and reprocessing
-
-Missing data is a **documented outcome**, not an error.
+### 5.3 Text Aggregation Layer
+- Aggregates extracted text per company
+- Minimizes the number of LLM calls
 
 ---
 
-### 7. SQLite for Storage
+### 5.4 LLM Parsing Layer
+- Single batch prompt per company
+- Strict JSON schema enforced
+- No inference or estimation allowed
 
-SQLite is used as the database because it:
-- Requires zero setup
-- Is sufficient for prototype scale
-- Is easy to inspect and export
-- Demonstrates system thinking without operational overhead
-
----
-
-### 8. CSV as the Primary Deliverable
-
-CSV export is treated as the **final authoritative output**.
-
-**Why**
-- Easy to review and validate
-- Compatible with analytics tools
-- Explicitly required by the case study
+The LLM is treated as a **structured text parser**, not a reasoning engine.
 
 ---
 
-## System Architecture (Conceptual)
-
-PDF Reports  
-↓  
-Page-Scoped Text Extraction  
-↓  
-Indicator-Specific LLM Prompt  
-↓  
-Structured JSON Output  
-↓  
-SQLite Database  
-↓  
-CSV Export  
+### 5.5 Validation & Normalization Layer
+- Validates JSON structure
+- Normalizes units and values
+- Explicitly marks missing data
 
 ---
 
-## Generalization & Scalability
-
-Although optimized for three known reports, the architecture is **generic by design**.
-
-In production:
-- Page hints would be replaced by TOC parsing, heading detection, or semantic search
-- The same extraction loop and prompts remain unchanged
-- New reports are added via configuration, not code changes
+### 5.6 Persistence Layer
+- SQLite used for intermediate storage
+- Enables re-export, debugging, and audit trails
 
 ---
 
-## Known Limitations
-
-- Page ranges are manually configured for this exercise
-- Some indicators are narrative-only or partially disclosed
-- No UI or dashboard is provided
-
-These limitations are intentional given the 3-day time constraint.
+### 5.7 Export Layer
+- Produces flat CSV output
+- One row per `(company, indicator)`
 
 ---
 
-## Why This Approach Was Chosen
+## 6. Data Flow
 
-This system prioritizes:
-- Accuracy over breadth
-- Transparency over automation
-- Shipping over perfection
+1. Load indicator and page configuration
+2. Read relevant pages from PDF
+3. Aggregate text per company
+4. Invoke LLM for batch extraction
+5. Validate and normalize results
+6. Persist to SQLite
+7. Export final CSV
 
-It reflects how **real ESG AI systems are built incrementally**, starting with controlled, auditable pipelines before scaling.
+---
+
+## 7. Execution Instructions
+
+```bash
+uv run python -m src.main
+```
+
+Output:
+```
+output/extractions.csv
+```
+
+---
+
+## 8. Rationale for Key Decisions
+
+### Why ESG-focused?
+ESG indicators are regulated, structured, and auditable, making them suitable for deterministic extraction pipelines.
+
+### Why No Vector Database?
+- Page locations are known
+- Indicators are predefined
+- Precision is prioritized over semantic recall
+
+### Why Batch LLM Calls?
+- Reduces latency and cost
+- Ensures consistency across indicators
+
+---
+
+## 9. Known Limitations
+- Image-based tables may not extract correctly
+- Extraction quality depends on PDF text fidelity
+- LLM output can still fail schema validation (handled safely)
+
+---
+
+## 10. Future Enhancements
+- Table-aware parsing
+- Confidence scoring heuristics
+- Indicator-level fallback strategies
+- Support for additional report types
+
+---
+
+## 11. Conclusion
+
+This system demonstrates a **pragmatic, production-aligned approach** to ESG data extraction, balancing automation with reliability and auditability. It is intentionally conservative, making it suitable for regulated reporting environments.
